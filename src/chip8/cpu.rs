@@ -148,6 +148,14 @@ impl CPU {
             }
 
             self.pc += 2;
+            
+            if self.dt > 0{
+                self.dt -= 1;
+            }
+
+            if self.st > 0{
+                self.st -=1;
+            }
         }
     }
 }

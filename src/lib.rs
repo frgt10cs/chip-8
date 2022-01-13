@@ -1,8 +1,36 @@
 pub mod chip8;
-use crate::chip8::{cpu::CPU, memory::Memory};
+use wasm_bindgen::prelude::*;
 
+ 
 
-#[no_mangle]
-pub fn init(){
-    let mut cpu = CPU::default();    
+// take two integer values and return a + b
+
+#[wasm_bindgen]
+
+pub fn ping_calc(a: i32, b: i32) -> i32 {
+
+  return a + b;
+
+}
+
+ 
+
+#[wasm_bindgen]
+
+extern "C" {
+
+    fn alert(s: &str);
+
+}
+
+ 
+
+// js alert
+
+#[wasm_bindgen]
+
+pub fn ping() {
+
+    alert("PONG!");
+
 }
