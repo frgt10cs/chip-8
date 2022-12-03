@@ -32,6 +32,28 @@ export function ping() {
     wasm.ping();
 }
 
+let WASM_VECTOR_LEN = 0;
+
+function passArray8ToWasm0(arg, malloc) {
+    const ptr = malloc(arg.length * 1);
+    getUint8Memory0().set(arg, ptr / 1);
+    WASM_VECTOR_LEN = arg.length;
+    return ptr;
+}
+/**
+* @param {Uint8Array} data
+*/
+export function load_rom(data) {
+    try {
+        var ptr0 = passArray8ToWasm0(data, wasm.__wbindgen_malloc);
+        var len0 = WASM_VECTOR_LEN;
+        wasm.load_rom(ptr0, len0);
+    } finally {
+        data.set(getUint8Memory0().subarray(ptr0 / 1, ptr0 / 1 + len0));
+        wasm.__wbindgen_free(ptr0, len0 * 1);
+    }
+}
+
 async function load(module, imports) {
     if (typeof Response === 'function' && module instanceof Response) {
         if (typeof WebAssembly.instantiateStreaming === 'function') {
