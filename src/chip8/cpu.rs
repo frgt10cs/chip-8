@@ -114,133 +114,143 @@ impl CPU {
         self.memory.display
     }
 
-    pub fn start_execute_instructions(&mut self) {
-        self.pc = START_PC;
-        for i in 0..self.instructions_count {
-            let pc = self.pc as usize;
+    pub fn get_memory(&self) -> [u8; 4096] {
+        self.memory.cells
+    }
 
-            // self.current_opcode =
-            //     (self.memory.cells[pc] as u16) << 4 & self.memory.cells[pc + 1] as u16;
+    pub fn get_current_opcode(&mut self) -> Opcode {
+        self.current_opcode
+    }
 
-            self.current_opcode
-                .set((self.memory.cells[pc] as u16) << 4 & self.memory.cells[pc + 1] as u16);
+    pub fn exec_cycle(&mut self) {
+        self.current_opcode.set(
+            (self.memory.cells[self.pc as usize] as u16) << 8
+                | self.memory.cells[self.pc as usize + 1] as u16,
+        );
+        self.exec_cur_op();
+    }
 
-            match (
-                self.current_opcode.op_1,
-                self.current_opcode.op_2,
-                self.current_opcode.op_3,
-                self.current_opcode.op_4,
-            ) {
-                (0x1, _, _, _) => {
-                    self.op_1nnn();
-                }
-                (0x2, _, _, _) => {
-                    self.op_2nnn();
-                }
-                (0x3, _, _, _) => {
-                    self.op_3xkk();
-                }
-                (0x4, _, _, _) => {
-                    self.op_4xkk();
-                }
-                (0x5, _, _, _) => {
-                    self.op_5xy0();
-                }
-                (0x6, _, _, _) => {
-                    self.op_6xkk();
-                }
-                (0x7, _, _, _) => {
-                    self.op_7xkk();
-                }
-                (0x8, _, _, 0x0) => {
-                    self.op_8xy0();
-                }
-                (0x8, _, _, 0x1) => {
-                    self.op_8xy1();
-                }
-                (0x8, _, _, 0x2) => {
-                    self.op_8xy2();
-                }
-                (0x8, _, _, 0x3) => {
-                    self.op_8xy3();
-                }
-                (0x8, _, _, 0x4) => {
-                    self.op_8xy4();
-                }
-                (0x8, _, _, 0x5) => {
-                    self.op_8xy5();
-                }
-                (0x8, _, _, 0x6) => {
-                    self.op_8xy6();
-                }
-                (0x8, _, _, 0x7) => {
-                    self.op_8xy7();
-                }
-                (0x8, _, _, 0xE) => {
-                    self.op_8xyE();
-                }
-                (0x9, _, _, _) => {
-                    self.op_9xy0();
-                }
-                (0xA, _, _, _) => {
-                    self.op_Annn();
-                }
-                (0xB, _, _, _) => {
-                    self.op_Bnnn();
-                }
-                (0xC, _, _, _) => {
-                    self.op_Cxkk();
-                }
-                (0xD, _, _, _) => {
-                    self.op_Dxyn();
-                }
-                (0xE, _, 0xA, 0x1) => {
-                    self.op_ExA1();
-                }
-                (0xE, _, 0x9, 0xE) => {
-                    self.op_Ex9E();
-                }
-                (0xF, _, 0x0, 0x7) => {
-                    self.op_Fx07();
-                }
-                (0xF, _, 0x0, 0xA) => {
-                    self.op_Fx0A();
-                }
-                (0xF, _, 0x1, 0x5) => {
-                    self.op_Fx15();
-                }
-                (0xF, _, 0x1, 0x8) => {
-                    self.op_Fx18();
-                }
-                (0xF, _, 0x1, 0xE) => {
-                    self.op_Fx1E();
-                }
-                (0xF, _, 0x2, 0x9) => {
-                    self.op_Fx29();
-                }
-                (0xF, _, 0x3, 0x3) => {
-                    self.op_Fx33();
-                }
-                (0xF, _, 0x5, 0x5) => {
-                    self.op_Fx55();
-                }
-                (0xF, _, 0x6, 0x5) => {
-                    self.op_Fx65();
-                }
-                value => {
-                    unreachable!("{}", format!("Unknown opcode: {:?}", value))
-                }
+    fn exec_cur_op(&mut self) {
+        self.pc += 2;
+        match (
+            self.current_opcode.op_1,
+            self.current_opcode.op_2,
+            self.current_opcode.op_3,
+            self.current_opcode.op_4,
+        ) {
+            (0x0, _, 0xE, 0x0) => {
+                self.op_00E0();
             }
-
-            self.pc += 2;
-
-            if self.dt > 0 {
-                self.dt -= 1;
+            (0x0, _, 0xE, 0xE) => {
+                self.op_00EE();
             }
-
-            if self.st > 0 {
-                self.st -= 1;
+            (0x1, _, _, _) => {
+                self.op_1nnn();
             }
+            (0x2, _, _, _) => {
+                self.op_2nnn();
+            }
+            (0x3, _, _, _) => {
+                self.op_3xkk();
+            }
+            (0x4, _, _, _) => {
+                self.op_4xkk();
+            }
+            (0x5, _, _, _) => {
+                self.op_5xy0();
+            }
+            (0x6, _, _, _) => {
+                self.op_6xkk();
+            }
+            (0x7, _, _, _) => {
+                self.op_7xkk();
+            }
+            (0x8, _, _, 0x0) => {
+                self.op_8xy0();
+            }
+            (0x8, _, _, 0x1) => {
+                self.op_8xy1();
+            }
+            (0x8, _, _, 0x2) => {
+                self.op_8xy2();
+            }
+            (0x8, _, _, 0x3) => {
+                self.op_8xy3();
+            }
+            (0x8, _, _, 0x4) => {
+                self.op_8xy4();
+            }
+            (0x8, _, _, 0x5) => {
+                self.op_8xy5();
+            }
+            (0x8, _, _, 0x6) => {
+                self.op_8xy6();
+            }
+            (0x8, _, _, 0x7) => {
+                self.op_8xy7();
+            }
+            (0x8, _, _, 0xE) => {
+                self.op_8xyE();
+            }
+            (0x9, _, _, _) => {
+                self.op_9xy0();
+            }
+            (0xA, _, _, _) => {
+                self.op_Annn();
+            }
+            (0xB, _, _, _) => {
+                self.op_Bnnn();
+            }
+            (0xC, _, _, _) => {
+                self.op_Cxkk();
+            }
+            (0xD, _, _, _) => {
+                self.op_Dxyn();
+            }
+            (0xE, _, 0xA, 0x1) => {
+                self.op_ExA1();
+            }
+            (0xE, _, 0x9, 0xE) => {
+                self.op_Ex9E();
+            }
+            (0xF, _, 0x0, 0x7) => {
+                self.op_Fx07();
+            }
+            (0xF, _, 0x0, 0xA) => {
+                self.op_Fx0A();
+            }
+            (0xF, _, 0x1, 0x5) => {
+                self.op_Fx15();
+            }
+            (0xF, _, 0x1, 0x8) => {
+                self.op_Fx18();
+            }
+            (0xF, _, 0x1, 0xE) => {
+                self.op_Fx1E();
+            }
+            (0xF, _, 0x2, 0x9) => {
+                self.op_Fx29();
+            }
+            (0xF, _, 0x3, 0x3) => {
+                self.op_Fx33();
+            }
+            (0xF, _, 0x5, 0x5) => {
+                self.op_Fx55();
+            }
+            (0xF, _, 0x6, 0x5) => {
+                self.op_Fx65();
+            }
+            value => {
+                panic!("{}", format!("Unknown opcode: {:?}", value));
+            }
+        }
+
+        if self.dt > 0 {
+            self.dt -= 1;
+        }
+
+        if self.st > 0 {
+            self.st -= 1;
         }
     }
 }
@@ -462,19 +472,22 @@ impl CPU {
 
         let mut erased = false;
 
-        let xPos = self.registers[vx] as usize % SCREEN_WIDTH;
-        let yPos = self.registers[vy] as usize % SCREEN_HEIGHT;
+        let x_pos = self.registers[vx] as usize % SCREEN_WIDTH;
+        let y_pos = self.registers[vy] as usize % SCREEN_HEIGHT;
+
+        self.registers[0xF] = 0;
 
         for y in 0..n {
-            let currentY = ((yPos + y) % SCREEN_HEIGHT) * SCREEN_WIDTH;
+            let current_y = (y_pos + y) % SCREEN_HEIGHT;
+            let sprite_byte = self.memory.cells[self.ir as usize + y];
             for x in 0..8 as usize {
-                let currentX = (xPos + x) % SCREEN_WIDTH;
-                let pixelValue = (self.memory.cells[self.ir as usize] >> x) & 0x1;
-                if pixelValue != 0 {
-                    if self.memory.display[currentY + currentX] == 0xFFFFFFFF {
-                        erased = true;
-                        self.memory.display[currentY + currentX] = 0x00000000;
+                let current_x = (x_pos + x) % SCREEN_WIDTH;                
+                let pixel_value = sprite_byte & (0x80 >> x);
+                if pixel_value != 0 {
+                    if self.memory.display[current_y * SCREEN_WIDTH + current_x] == 0xFFFFFFFF {
+                        erased = true;                        
                     }
+                    self.memory.display[current_y * SCREEN_WIDTH + current_x] ^= 0xFFFFFFFF;
                 }
             }
         }

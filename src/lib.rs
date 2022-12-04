@@ -20,7 +20,7 @@ pub fn main() -> Result<(), JsValue> {
 }
 
 #[wasm_bindgen]
-pub fn run_rom(data: &mut [u8]) {
+pub fn load_rom(data: &mut [u8]) {
     let window = web_sys::window().expect("no global `window` exists");
     let document = window.document().expect("should have a document on window");
     let body = document.body().expect("document should have a body");
@@ -37,10 +37,37 @@ pub fn run_rom(data: &mut [u8]) {
 
     body.append_child(&val);
     unsafe {
-        CPU.load_instructions(data.to_vec());
-        CPU.start_execute_instructions();
+        CPU.reset();
+        CPU.load_instructions(data.to_vec());        
     }
 }
 
 #[wasm_bindgen]
-pub fn get_display_memory() {}
+pub fn exec_cycle(){
+    unsafe{
+        CPU.exec_cycle();
+    }    
+}
+
+#[wasm_bindgen]
+pub fn get_display_memory() -> Box<[u32]> {
+    unsafe{
+        Box::new(CPU.get_display_memory())
+    }    
+}
+
+
+#[wasm_bindgen]
+pub fn get_memory() -> Box<[u8]> {
+    unsafe{
+        Box::new(CPU.get_memory())
+    }    
+}
+
+#[wasm_bindgen]
+pub fn get_current_opcode() -> String{
+    unsafe{
+        let opcode=CPU.get_current_opcode();
+        format!("{}: {}, {}, {}, {}", opcode.opcode, opcode.op_1, opcode.op_2, opcode.op_3, opcode.op_4)
+    }    
+}

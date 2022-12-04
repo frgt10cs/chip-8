@@ -1,4 +1,4 @@
-#[derive(Default)]
+#[derive(Default, Clone, Copy)]
 pub struct Opcode {
     pub opcode: u16,
     pub op_1: u8,
@@ -22,9 +22,9 @@ impl Opcode {
     pub fn set(&mut self, opcode: u16) {
         self.opcode = opcode;
 
-        self.op_1 = (opcode & 0xF000 >> 12) as u8;
-        self.op_2 = (opcode & 0x0F00 >> 8) as u8;
-        self.op_3 = (opcode & 0x00F0 >> 4) as u8;
+        self.op_1 = ((opcode & 0xF000) >> 12) as u8;
+        self.op_2 = ((opcode & 0x0F00) >> 8) as u8;
+        self.op_3 = ((opcode & 0x00F0) >> 4) as u8;
         self.op_4 = (opcode & 0x000F) as u8;
     }    
 }
