@@ -42,7 +42,7 @@ pub struct CPU {
     st: u8,
     current_opcode: Opcode,
     // keys: [Key; 16],
-    key_states: [bool; 16],
+    keys_states: [u8; 16],
     instructions_count: u16,
     memory: Memory,
 }
@@ -75,7 +75,7 @@ impl CPU {
             //     Key::new('B', 'C'),
             //     Key::new('F', 'V'),
             // ],
-            key_states: [false; 16],
+            keys_states: [0; 16],
             instructions_count: 0,
             memory: Memory::default(),
         };
@@ -95,7 +95,7 @@ impl CPU {
         self.dt = 0;
         self.st = 0;
         self.current_opcode = Opcode::default();
-        self.key_states = [false; 16];
+        self.keys_states = [0; 16];
         self.instructions_count = 0;
         self.memory = Memory::default();
         for i in 0..FONT_SIZE {
@@ -120,6 +120,15 @@ impl CPU {
 
     pub fn get_current_opcode(&mut self) -> Opcode {
         self.current_opcode
+    }
+
+    pub fn set_keys_states(&mut self, states: &[u8]) {
+        if states.len() == 16 {
+            self.keys_states.copy_from_slice(states);
+        }
+        else{
+            // TODO: handle
+        }
     }
 
     pub fn exec_cycle(&mut self) {
@@ -481,11 +490,11 @@ impl CPU {
             let current_y = (y_pos + y) % SCREEN_HEIGHT;
             let sprite_byte = self.memory.cells[self.ir as usize + y];
             for x in 0..8 as usize {
-                let current_x = (x_pos + x) % SCREEN_WIDTH;                
+                let current_x = (x_pos + x) % SCREEN_WIDTH;
                 let pixel_value = sprite_byte & (0x80 >> x);
                 if pixel_value != 0 {
                     if self.memory.display[current_y * SCREEN_WIDTH + current_x] == 0xFFFFFFFF {
-                        erased = true;                        
+                        erased = true;
                     }
                     self.memory.display[current_y * SCREEN_WIDTH + current_x] ^= 0xFFFFFFFF;
                 }
@@ -501,7 +510,7 @@ impl CPU {
     fn op_Ex9E(&mut self) {
         let vx = self.current_opcode.op_2 as usize;
         let key = self.registers[vx] as usize;
-        if self.key_states[key] {
+        if self.keys_states[key] == 1 {
             self.pc += 2;
         }
     }
@@ -512,7 +521,7 @@ impl CPU {
     fn op_ExA1(&mut self) {
         let vx = self.current_opcode.op_2 as usize;
         let key = self.registers[vx] as usize;
-        if !self.key_states[key] {
+        if self.keys_states[key] == 0 {
             self.pc += 2;
         }
     }
@@ -531,8 +540,8 @@ impl CPU {
     fn op_Fx0A(&mut self) {
         let vx = self.current_opcode.op_2 as usize;
         'ext: loop {
-            for i in 0..self.key_states.len() {
-                if self.key_states[i] {
+            for i in 0..self.keys_states.len() {
+                if self.keys_states[i] == 1 {
                     self.registers[vx] = i as u8;
                     break 'ext;
                 }
