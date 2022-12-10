@@ -30,10 +30,6 @@ class Terminal {
 
     }
 
-    randomInt(min, max) {
-        return Math.floor(min + Math.random() * (max + 1 - min));
-    }
-
     runGlitch() {
         if (this.glitchEffect) {
             glitch(this.canvas, this.ctx);
@@ -53,18 +49,14 @@ class Terminal {
         }
     }
 
+    drawPath(path) {
+        this.ctx.fill(path);
+    }
+
     drawText(text, x, y, font) {
         if (font != undefined)
             this.ctx.font = font;
         this.ctx.fillText(text, x, y);
-    }
-
-    drawMenuCursor(option) {
-        var path = new Path2D();
-        path.moveTo(50, 220 + option * 40);
-        path.lineTo(50, 190 + option * 40);
-        path.lineTo(70, 205 + option * 40);
-        this.ctx.fill(path);
     }
 
     clear() {
