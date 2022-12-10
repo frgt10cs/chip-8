@@ -1,6 +1,4 @@
-function randomInt(min, max) {
-    return Math.floor(min + Math.random() * (max + 1 - min));
-}
+import { randomInt } from './rand.js';
 
 const glitch = (canvas, ctx) => {    
     let data = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -16,8 +14,7 @@ const glitch = (canvas, ctx) => {
             data.data[(deltaY + x) * 4 + 3] = data.data[(deltaY + (x + skew)) * 4 + 3];
         }
     }
-    ctx.putImageData(data, 0, 0);
-    setTimeout(() => glitch(canvas, ctx), randomInt(300, 5000));
+    ctx.putImageData(data, 0, 0);    
 }
 
 export { glitch };

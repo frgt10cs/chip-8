@@ -1,13 +1,38 @@
 import init, { load_rom, exec_cycle, get_display_memory, get_memory, get_current_opcode, reset, set_keys_states } from '../pkg/chip8.js';
 import { glitch } from './glitch.js';
+import { Terminal } from './terminal.js';
 
 await init();
+
+
+// emulator 
+
+const greetings = "";
+let currentGame = "";
+let glitchEffect = true;
+let terminalEffect = true;
+
+let glitchCycle = null; 
+
 
 const gameSelector = document.getElementById("game_selector");
 const runGameBtn = document.getElementById("run_game");
 
 const canvas = document.getElementById('terminal');
-const ctx = canvas.getContext('2d');
+
+const terminal = new Terminal(canvas, "rgb(30, 109, 47)", 20);
+terminal.clear();
+
+let font = '48px serif';
+terminal.drawText('Welcome to vand0s\'s CHIP-8 emulator!', 20, 70, font);
+
+font = '36px serif';
+terminal.drawText('Play', 80, 220, font);
+terminal.drawText('Settings', 80, 300, font);
+terminal.drawText('About author', 80, 380, font);
+
+terminal.drawMenuCursor(2);
+
 
 let mainCycle = null;
 let delay = 20;
@@ -68,11 +93,7 @@ runGameBtn.onclick = async function () {
     console.log(data);
     console.log("loaded: " + data.length + " bytes");
 
-    ctx.font = '48px serif';
-    ctx.fillText('Welcome to vand0s\'s CHIP-8 emulator!', 20, 70);
-
-    ctx.font = '24px serif';
-    ctx.fillText('Loading ROM...', 20, 120);
+ 
 
     try {
       load_rom(data);
@@ -88,23 +109,11 @@ runGameBtn.onclick = async function () {
       set_keys_states(keyStatesValues);
       exec_cycle();
       display_memory = get_display_memory();
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      ctx.fillStyle = "rgb(30, 109, 47)";
-      for (let y = 0; y < 32; y++) {
-        for (let x = 0; x < 64; x++) {
-          if (display_memory[y * 64 + x] != 0) {
-            ctx.fillStyle = "rgb(30, 109, 47)";
-            ctx.fillRect(x * 20, y * 20, 20, 20);
-          }
-        }
-      }
+      terminal.draw(display_memory);
+      
     }, delay);
   }
   else {
 
   }
 }
-
-glitch(canvas, ctx);
