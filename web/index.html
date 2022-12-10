@@ -5,13 +5,17 @@
   <base href=".">
   <meta charset="UTF-8" />
   <title>CHIP-8 Rust</title>
+  <link rel="stylesheet" href="index.css">
   <link rel="stylesheet" href="terminal.css">
+  <link href="https://fonts.cdnfonts.com/css/unscreen-mk" rel="stylesheet">
+                
+                
 </head>
 
 <body>
 
 
-  <div id="1">
+  <!-- <div id="1">
     <select id="game_selector">
       <option value="roms/test_opcode.ch8">test_opcode</option>
       <option value="roms/airplane.ch8">airplane</option>
@@ -24,18 +28,12 @@
       <option></option>
     </select>
     <button id="run_game">Run</button>
-  </div>
+  </div> -->
 
-  <div id="2">
+  <div id="terminal-container">
     <canvas id="terminal" width="1280" height="640"></canvas>
   </div>
-
-  <style>
-    canvas {
-      border: 4px solid rgb(30, 109, 47);
-      background-color: black;
-    }
-  </style>
+  
   <script type="module" src="glitch.js"></script>
   <script type="module" src="index.js"></script>
 </body>

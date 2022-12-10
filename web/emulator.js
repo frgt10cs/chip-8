@@ -53,22 +53,25 @@ class Emulator {
 
     drawMainMenu() {
         this.terminal.clear();
-        let font = '48px serif';
-        this.terminal.drawText('Welcome to frgt10\'s CHIP-8 emulator!', 20, 70, font);
+        let font = 'bolder 64px Unscreen';
+        this.terminal.drawText('CHIP-8 emulator', 80, 120, font);
 
-        font = '36px serif';
-        this.terminal.drawText('Play', 80, 220, font);
-        this.terminal.drawText('Settings', 80, 300, font);
-        this.terminal.drawText('About author', 80, 380, font);
+        font = 'bold 36px Unscreen';
+        this.terminal.drawText('Play', 80, 280, font);
+        this.terminal.drawText('Settings', 80, 360, font);
+        this.terminal.drawText('About', 80, 440, font);
+
+        font = '24px Unscreen';
+        this.terminal.drawText('frgt10 (2022)', 1075, 610, font);        
 
         this.drawMenuCursor(this.menuOption);
     }
 
     drawMenuCursor(option) {
         var path = new Path2D();
-        path.moveTo(50, 140 + option * 80);
-        path.lineTo(50, 110 + option * 80);
-        path.lineTo(70, 125 + option * 80);
+        path.moveTo(50, 200 + option * 80);
+        path.lineTo(50, 170 + option * 80);
+        path.lineTo(70, 185 + option * 80);
         this.terminal.drawPath(path);
     }
 
