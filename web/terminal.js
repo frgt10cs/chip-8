@@ -10,6 +10,8 @@ class Terminal {
         this.frontColor = frontColor;
         this.ctx.fillStyle = frontColor;
         this.glitchEffect = true;
+        this.blickEffect = true;
+        this.parent = canvas.parentElement;
         this.runGlitch();
     }
 
@@ -23,11 +25,13 @@ class Terminal {
     }
 
     enableBlickEffect() {
-
+        this.blickEffect = true;
+        this.parent.classList.add("blick");
     }
 
     disableBlickEffect() {
-
+        this.blickEffect = false;
+        this.parent.classList.remove("blick");
     }
 
     runGlitch() {
@@ -57,6 +61,14 @@ class Terminal {
         if (font != undefined)
             this.ctx.font = font;
         this.ctx.fillText(text, x, y);
+    }
+
+    drawCursor(option, step) {                
+        var path = new Path2D();
+        path.moveTo(50, 280 + option * step);
+        path.lineTo(50, 250 + option * step);
+        path.lineTo(70, 265 + option * step);
+        this.ctx.fill(path);
     }
 
     clear() {
