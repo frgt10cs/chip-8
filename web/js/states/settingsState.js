@@ -2,9 +2,10 @@ import { MessageTypes, StateMessage } from '../stateMessage.js';
 import { State } from './state.js';
 
 class SettingsState extends State {
-    constructor(terminal) {
+    constructor(terminal, settings) {
         super();
         this.terminal = terminal;
+        this.settings = settings;
         this.optionHadlers = [this.switchGlitchEffect, this.switchBlickEffect, this.changeToDelayState];
         this.reset();
     }
@@ -63,9 +64,9 @@ class SettingsState extends State {
         this.terminal.drawText('Blick', 80, 360, font);
         this.terminal.drawText('Delay', 80, 440, font);
 
-        this.terminal.drawText("[" + (this.terminal.glitchEffect ? "x" : "") + "]", 460, 280, font);
-        this.terminal.drawText("[" + (this.terminal.blickEffect ? "x" : "") + "]", 460, 360, font);
-        this.terminal.drawText(this.gameBaseDelayMode ? "Game based" : this.delay, 460, 440, font);
+        this.terminal.drawText("[" + (this.settings.glitchEffect ? "x" : "") + "]", 460, 280, font);
+        this.terminal.drawText("[" + (this.settings.blickEffect ? "x" : "") + "]", 460, 360, font);
+        this.terminal.drawText(this.settings.delayMode ? "Game based" : this.settings.delay, 460, 440, font);
 
         this.terminal.drawCursor(this.option, 80);
     }

@@ -4,6 +4,7 @@ import { SelectGameState } from "./states/selectGameState.js";
 import { SettingsState } from "./states/settingsState.js";
 import { DelaySettingsState } from "./states/delaySettingsState.js";
 import { MessageTypes, StateMessage } from "./stateMessage.js";
+import { DelayMode, Settings, } from './settings.js';
 
 class Emulator {
 
@@ -17,18 +18,17 @@ class Emulator {
         };
         this.keyStatesValues = [];
         this.mainCycle = null;
+
         this.gameBaseDelayMode = true;
         this.delay = 20;
-        // this.settingsOptions = [this.switchGlitchEffect, this.switchBlickEffect, this.changeDelayState];
-        // this.settingsOption = 0;
-        // this.delaySettingsOption = 0;        
-        // this.gameOption = 0;
+
+        this.settings = new Settings(true, true, DelayMode.GAME_BASED, 20);
 
         this.states = {
             "menu": new MainMenuState(this.terminal),
             "selectGame": new SelectGameState(this.terminal, games),
-            "settings": new SettingsState(this.terminal),
-            "delaySettings": new DelaySettingsState(this.terminal)
+            "settings": new SettingsState(this.terminal, this.settings),
+            "delaySettings": new DelaySettingsState(this.terminal, this.settings.delaySettings)
         }
         this.statesStack = [this.states.menu];
     }
@@ -50,6 +50,7 @@ class Emulator {
                     else {
                         this.terminal.enableGlitchEffect();
                     }
+                    this.settings.glitchEffect = !this.settings.glitchEffect;
                     break;
                 case MessageTypes.SWITCH_BLICK:
                     if (this.terminal.blickEffect) {
@@ -58,6 +59,16 @@ class Emulator {
                     else {
                         this.terminal.enableBlickEffect();
                     }
+                    this.settings.blickEffect = !this.settings.blickEffect;
+                    break;
+                case MessageTypes.SWITCH_DELAY_MODE:                    
+                    if (this.gameBaseDelayMode) {
+                        this.settings.delaySettings.mode = DelayMode.VALUE;
+                    }
+                    else {
+                        this.settings.delaySettings.mode = DelayMode.GAME_BASED;
+                    }
+                    this.gameBaseDelayMode = !this.gameBaseDelayMode;
                     break;
                 case MessageTypes.BACK:
                     this.statesStack.pop();

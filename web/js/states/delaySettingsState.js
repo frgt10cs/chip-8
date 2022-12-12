@@ -1,11 +1,13 @@
+import { DelayMode, DelaySettings } from '../settings.js';
 import { MessageTypes, StateMessage } from '../stateMessage.js';
 import { State } from "./state.js";
 
 class DelaySettingsState extends State {
-    constructor(terminal) {
+    constructor(terminal, delaySettings) {
         super();
         this.terminal = terminal;
-        this.gameBaseDelayMode = true;        
+        this.delaySettings = delaySettings;
+        this.optionHadlers = [this.switchDelayMode, this.switchEnterDelayValueMode];
         this.reset();
     }
 
@@ -32,7 +34,7 @@ class DelaySettingsState extends State {
     }
 
     keyUpHandler = () => {
-
+        
     }
 
     arrowUpHandler = () => {
@@ -40,14 +42,18 @@ class DelaySettingsState extends State {
     }
 
     arrowDownHandler = () => {
-        let len = this.gameBaseDelayMode ? 0 : 1;
+        let len = this.delaySettings.mode == DelayMode.GAME_BASED ? 0 : 1;
         this.option += this.option == len ? 0 : 1;
     }
 
-    enterHandler = () => { }
+    enterHandler = () => this.optionHadlers[this.option]();
 
     escHandler = () => {
         return new StateMessage(MessageTypes.BACK);
+    }
+
+    switchDelayMode = () => {
+        return new StateMessage(MessageTypes.SWITCH_DELAY_MODE);
     }
 
     draw = () => {
@@ -56,10 +62,12 @@ class DelaySettingsState extends State {
 
         font = 'bold 36px Unscreen';
         this.terminal.drawText('Mode', 80, 280, font);
-        this.terminal.drawText('Value', 80, 360, font);
+        this.terminal.drawText(this.delaySettings.mode, 460, 280, font);
 
-        this.terminal.drawText(this.gameBaseDelayMode ? "Game based" : "Value", 460, 280, font);
-        this.terminal.drawText(this.delay, 460, 360, font);
+        if (this.delaySettings.mode == DelayMode.VALUE) {
+            this.terminal.drawText('Value', 80, 360, font);
+            this.terminal.drawText(this.delaySettings.value, 460, 360, font);
+        }
 
         this.terminal.drawCursor(this.option, 80);
     }
