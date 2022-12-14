@@ -7,9 +7,11 @@ class DelaySettingsState extends State {
         super();
         this.terminal = terminal;
         this.delaySettings = delaySettings;
-        this.optionHadlers = [this.switchDelayMode, this.switchEnterDelayValueMode];
+        this.optionHadlers = [this.switchDelayMode, this.switchEditDelayValueState];
         this.reset();
     }
+
+    getName = () => "delaySettings";
 
     reset = () => { this.option = 0; }
 
@@ -34,7 +36,7 @@ class DelaySettingsState extends State {
     }
 
     keyUpHandler = () => {
-        
+
     }
 
     arrowUpHandler = () => {
@@ -55,6 +57,8 @@ class DelaySettingsState extends State {
     switchDelayMode = () => {
         return new StateMessage(MessageTypes.SWITCH_DELAY_MODE);
     }
+
+    switchEditDelayValueState = () => new StateMessage(MessageTypes.SWITCH_STATE, "editDelayValue");
 
     draw = () => {
         let font = 'bolder 64px Unscreen';

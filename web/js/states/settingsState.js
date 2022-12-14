@@ -10,6 +10,8 @@ class SettingsState extends State {
         this.reset();
     }
 
+    getName = () => "settings";
+
     reset = () => {
         this.option = 0;
     }

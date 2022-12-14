@@ -10,6 +10,8 @@ class SelectGameState extends State {
         this.reset();
     }
 
+    getName = () => "selectGame";
+
     reset = () => { this.option = 0; }
 
     keyDownHandler = (key) => {
@@ -44,6 +46,7 @@ class SelectGameState extends State {
     }
 
     enterHandler = () => {
+        // load game message
         reset();
         let arrayBuffer = this.base64ToArrayBuffer(this.games[this.option].game);
         let u8a = new Uint8Array(arrayBuffer);

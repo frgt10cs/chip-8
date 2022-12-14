@@ -1,7 +1,7 @@
 const MessageTypes = {
     SWITCH_STATE: "switchWindow", SWITCH_GLITCH: "switchGlitch",
     SWITCH_BLICK: "switchBlick", SWITCH_DELAY_MODE: "switchDelayMode",
-    BACK: "back"
+    SET_DELAY_VALUE: "setDelayValue", BACK: "back"
 };
 
 class StateMessage {

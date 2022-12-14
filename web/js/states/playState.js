@@ -1,5 +1,6 @@
-import { load_rom, exec_cycle, get_display_memory, set_keys_states, reset } from "../../pkg/chip8.js";
+import { load_rom, exec_cycle, get_display_memory, set_keys_states, reset } from "../../../pkg/chip8.js";
 import { State } from "./state.js";
+import { MessageTypes, StateMessage } from '../stateMessage.js';
 
 class PlayState extends State {
     constructor(terminal) {
@@ -15,6 +16,8 @@ class PlayState extends State {
         reset();
     }
 
+    getName = () => "play";
+
     reset = () => {
         reset();
     }
@@ -23,12 +26,28 @@ class PlayState extends State {
         if (this.keyStates[key] != undefined) {
             this.keyStates[key] = 1;
         }
+        else {
+            let handleKeyResult = null;
+            switch (key) {
+                case "Escape":
+                    handleKeyResult = this.escHandler();
+                    break;
+                case "Enter":
+                    handleKeyResult = this.enterHandler();
+                    break;
+            }
+            return handleKeyResult;
+        }
     }
 
     keyUpHandler = (key) => {
         if (this.keyStates[key] != undefined) {
             this.keyStates[key] = 0;
         }
+    }
+
+    escHandler = () => {
+        return new StateMessage(MessageTypes.SWITCH_STATE, "pause");
     }
 
     draw = () => {

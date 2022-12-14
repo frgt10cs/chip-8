@@ -10,6 +10,8 @@ class MainMenuState extends State {
         this.reset();
     }
 
+    getName = () => "menu";
+
     reset = () => {
         this.option = 0;
     }

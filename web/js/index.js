@@ -28,7 +28,7 @@ let games = [
 const emulator = new Emulator(terminal, games);
 emulator.run();
 
-document.onkeyup = function (e) {
+document.onkeyup = function (e) {  
   emulator.onKeyUp(e.key);
 }
 

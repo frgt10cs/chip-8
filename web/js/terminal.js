@@ -63,12 +63,16 @@ class Terminal {
         this.ctx.fillText(text, x, y);
     }
 
-    drawCursor(option, step) {                
+    drawCursor(option, step) {
         var path = new Path2D();
         path.moveTo(50, 280 + option * step);
         path.lineTo(50, 250 + option * step);
         path.lineTo(70, 265 + option * step);
         this.ctx.fill(path);
+    }
+
+    drawRect(x, y, length, width) {
+        this.ctx.fillRect(x * scale, y * scale, length * scale, width * scale);
     }
 
     clear() {
