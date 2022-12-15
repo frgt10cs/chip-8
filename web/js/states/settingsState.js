@@ -68,9 +68,18 @@ class SettingsState extends State {
 
         this.terminal.drawText("[" + (this.settings.glitchEffect ? "x" : "") + "]", 460, 280, font);
         this.terminal.drawText("[" + (this.settings.blickEffect ? "x" : "") + "]", 460, 360, font);
-        this.terminal.drawText(this.settings.delayMode ? "Game based" : this.settings.delay, 460, 440, font);
+        this.terminal.drawText("...", 460, 440, font);
 
         this.terminal.drawCursor(this.option, 80);
+        
+        this.terminal.drawText('1 2 3 4', 900, 280, font);        
+        this.terminal.drawText('q w e r', 900, 320, font);        
+        this.terminal.drawText('a s d f', 900, 360, font);        
+        this.terminal.drawText('z x c v', 900, 400, font);        
+
+        font = '20px Unscreen';
+        this.terminal.drawText('--------------', 900, 420, font);       
+        this.terminal.drawText('⮬ Control ⮭', 905, 440, font);       
     }
 }
 

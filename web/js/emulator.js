@@ -7,6 +7,7 @@ import { DelayMode, Settings, } from './settings.js';
 import { EditDelayValueState } from './states/editDelayValueState.js';
 import { PlayState } from "./states/playState.js";
 import { PauseState } from './states/pauseState.js';
+import { load_rom, reset } from "../../../pkg/chip8.js";
 
 class Emulator {
 
@@ -15,8 +16,11 @@ class Emulator {
         this.games = games;
         this.currentGame = null;
         this.mainCycle = null;
-
+        
         this.settings = new Settings(true, true, DelayMode.GAME_BASED, 20);
+        this.gameBaseDelayMode = true;
+        this.delay = 20;
+        this.menuDelay = 20;
 
         this.states = [
             new MainMenuState(this.terminal),
@@ -37,14 +41,14 @@ class Emulator {
     getDelay = () => {
         if (this.getState().getName() == "play") {
             if (this.settings.delaySettings.mode == DelayMode.GAME_BASED) {
-
+                return this.currentGame.delay;
             }
             else {
-
+                return this.delay;
             }
         }
         else {
-            return this.settings.menuDelay;
+            return this.menuDelay;
         }
     }
 
@@ -84,7 +88,18 @@ class Emulator {
                     this.gameBaseDelayMode = !this.gameBaseDelayMode;
                     break;
                 case MessageTypes.SET_DELAY_VALUE:
+                    this.delay =  handleKeyResult.value;
                     this.settings.delaySettings.value = handleKeyResult.value;
+                    break;
+                case MessageTypes.RUN_GAME:
+                    reset();
+                    this.currentGame = this.games[handleKeyResult.value];
+                    let arrayBuffer = this.base64ToArrayBuffer(this.currentGame.game);
+                    let u8a = new Uint8Array(arrayBuffer);
+                    let data = Array.from(u8a);
+                    load_rom(data);                    
+                    this.statesStack.push(this.getStateByName("play"));                 
+                    this.restart();
                     break;
                 case MessageTypes.ESCAPE_FROM_GAME:
                     this.statesStack.pop();
@@ -99,36 +114,17 @@ class Emulator {
 
     onKeyUp = (key) => {
         this.getState().keyUpHandler(key);
+    }    
+
+    base64ToArrayBuffer(base64) {
+        var binary_string = window.atob(base64);
+        var len = binary_string.length;
+        var bytes = new Uint8Array(len);
+        for (var i = 0; i < len; i++) {
+            bytes[i] = binary_string.charCodeAt(i);
+        }
+        return bytes.buffer;
     }
-
-    // playingState() {
-    //     this.state = "Playing";
-    //     this.stateFunction = this.gameCycle;
-    //     this.escHandler = this.playingEscHandler;
-    // }
-
-    // gameCycle() {
-    //     set_keys_states(Object.values(this.keyStates));
-    //     exec_cycle();
-    //     this.terminal.draw(get_display_memory());
-    // }
-
-    // base64ToArrayBuffer(base64) {
-    //     var binary_string = window.atob(base64);
-    //     var len = binary_string.length;
-    //     var bytes = new Uint8Array(len);
-    //     for (var i = 0; i < len; i++) {
-    //         bytes[i] = binary_string.charCodeAt(i);
-    //     }
-    //     return bytes.buffer;
-    // }
-
-    // playingEscHandler() {
-    //     this.selectGameState();
-    // }
-
-
-    // MAIN CYCLE
 
     run = () => {
         this.mainCycle = setInterval(() => {

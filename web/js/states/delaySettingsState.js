@@ -54,9 +54,7 @@ class DelaySettingsState extends State {
         return new StateMessage(MessageTypes.BACK);
     }
 
-    switchDelayMode = () => {
-        return new StateMessage(MessageTypes.SWITCH_DELAY_MODE);
-    }
+    switchDelayMode = () => new StateMessage(MessageTypes.SWITCH_DELAY_MODE);
 
     switchEditDelayValueState = () => new StateMessage(MessageTypes.SWITCH_STATE, "editDelayValue");
 

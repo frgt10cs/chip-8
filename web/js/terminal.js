@@ -57,10 +57,13 @@ class Terminal {
         this.ctx.fill(path);
     }
 
-    drawText(text, x, y, font) {
+    drawText(text, x, y, font, color) {
         if (font != undefined)
             this.ctx.font = font;
+        if(color != undefined)
+            this.ctx.fillStyle = color;
         this.ctx.fillText(text, x, y);
+        this.ctx.fillStyle = this.frontColor;
     }
 
     drawCursor(option, step) {
@@ -72,7 +75,7 @@ class Terminal {
     }
 
     drawRect(x, y, length, width) {
-        this.ctx.fillRect(x * scale, y * scale, length * scale, width * scale);
+        this.ctx.fillRect(x * this.scale, y * this.scale, length * this.scale, width * this.scale);
     }
 
     clear() {

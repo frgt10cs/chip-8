@@ -28,9 +28,7 @@ class PauseState extends State {
     }
 
     keyUpHandler = (key) => {
-        if (this.keyStates[key] != undefined) {
-            this.keyStates[key] = 0;
-        }
+
     }
 
     escHandler = () => new StateMessage(MessageTypes.ESCAPE_FROM_GAME);
@@ -39,7 +37,12 @@ class PauseState extends State {
 
     draw = () => {
         this.terminal.draw(get_display_memory());
-        this.terminal.drawRect(10, 10, 20, 20);
+        this.terminal.drawRect(18, 6, 28, 12);
+        let font = 'bolder 64px Unscreen';
+        this.terminal.drawText('Pause', 530, 180, font, "rgb(0, 0, 0)");
+        font = 'bold 36px Unscreen';
+        this.terminal.drawText('[ENTER] - continue', 450, 260, font, "rgb(0, 0, 0)");
+        this.terminal.drawText('[ESC] - exit to menu', 450, 310, font, "rgb(0, 0, 0)");
     }
 }
 

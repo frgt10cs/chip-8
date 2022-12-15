@@ -45,15 +45,16 @@ class SelectGameState extends State {
         this.option += this.option == this.games.length - 1 ? 0 : 1;
     }
 
-    enterHandler = () => {
-        // load game message
-        reset();
-        let arrayBuffer = this.base64ToArrayBuffer(this.games[this.option].game);
-        let u8a = new Uint8Array(arrayBuffer);
-        let data = Array.from(u8a);
-        load_rom(data);
-        this.playingState();
-    }
+    enterHandler = () => new StateMessage(MessageTypes.RUN_GAME, this.option);
+    // {
+    //     // load game message
+    //     reset();
+    //     let arrayBuffer = this.base64ToArrayBuffer(this.games[this.option].game);
+    //     let u8a = new Uint8Array(arrayBuffer);
+    //     let data = Array.from(u8a);
+    //     load_rom(data);
+    //     this.playingState();
+    // }
 
     escHandler = () => {
         return new StateMessage(MessageTypes.BACK);
