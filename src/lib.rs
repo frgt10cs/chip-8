@@ -4,7 +4,6 @@ use wasm_bindgen::prelude::*;
 
 static mut CPU: CPU = CPU::default();
 
-// Called when the wasm module is instantiated
 #[wasm_bindgen(start)]
 pub fn main() -> Result<(), JsValue> {
     Ok(())

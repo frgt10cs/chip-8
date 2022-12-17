@@ -1,8 +1,6 @@
 use crate::chip8::opcode::Opcode;
-use crate::chip8::{key::Key, memory::*};
+use crate::chip8::memory::*;
 use rand::Rng;
-use std::collections::HashMap;
-use wasm_bindgen::convert::RefMutFromWasmAbi;
 
 const START_PC: u16 = 0x200;
 const START_FONT: u16 = 0x050;
