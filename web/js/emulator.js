@@ -8,6 +8,7 @@ import { EditDelayValueState } from './states/editDelayValueState.js';
 import { PlayState } from "./states/playState.js";
 import { PauseState } from './states/pauseState.js';
 import { load_rom, reset } from "../../../pkg/chip8.js";
+import {AboutState} from './states/aboutState.js';
 
 class Emulator {
 
@@ -27,6 +28,7 @@ class Emulator {
             new SelectGameState(this.terminal, games),
             new SettingsState(this.terminal, this.settings),
             new DelaySettingsState(this.terminal, this.settings.delaySettings),
+            new AboutState(this.terminal),
             new EditDelayValueState(this.terminal, this.settings.delaySettings),
             new PlayState(this.terminal),
             new PauseState(this.terminal)

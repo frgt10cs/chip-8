@@ -49,7 +49,7 @@ pub struct CPU {
 
 impl CPU {
     pub const fn default() -> Self {
-        let mut cpu = CPU {
+        CPU {
             registers: [0; 16],
             ir: 0,
             pc: START_PC,
@@ -57,30 +57,10 @@ impl CPU {
             dt: 0,
             st: 0,
             current_opcode: Opcode::default(),
-            // keys: [
-            //     Key::new('1', '1'),
-            //     Key::new('2', '2'),
-            //     Key::new('3', '3'),
-            //     Key::new('C', '4'),
-            //     Key::new('4', 'Q'),
-            //     Key::new('5', 'W'),
-            //     Key::new('6', 'E'),
-            //     Key::new('D', 'R'),
-            //     Key::new('7', 'A'),
-            //     Key::new('8', 'S'),
-            //     Key::new('9', 'D'),
-            //     Key::new('E', 'F'),
-            //     Key::new('A', 'Z'),
-            //     Key::new('0', 'X'),
-            //     Key::new('B', 'C'),
-            //     Key::new('F', 'V'),
-            // ],
             keys_states: [0; 16],
             instructions_count: 0,
             memory: Memory::default(),
-        };
-
-        cpu
+        }
     }
 
     fn get_random_byte() -> u8 {
@@ -122,11 +102,14 @@ impl CPU {
         self.current_opcode
     }
 
+    pub fn get_pc(&self) -> u16 {
+        self.pc
+    }
+
     pub fn set_keys_states(&mut self, states: &[u8]) {
         if states.len() == 16 {
             self.keys_states.copy_from_slice(states);
-        }
-        else{
+        } else {
             // TODO: handle
         }
     }

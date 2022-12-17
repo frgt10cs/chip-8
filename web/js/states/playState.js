@@ -1,4 +1,4 @@
-import { load_rom, exec_cycle, get_display_memory, set_keys_states, reset } from "../../../pkg/chip8.js";
+import { load_rom, exec_cycle, get_display_memory, set_keys_states, reset, get_current_opcode } from "../../../pkg/chip8.js";
 import { State } from "./state.js";
 import { MessageTypes, StateMessage } from '../stateMessage.js';
 
@@ -52,7 +52,9 @@ class PlayState extends State {
 
     draw = () => {
         set_keys_states(Object.values(this.keyStates));
+        console.log(get_current_opcode());
         exec_cycle();
+        console.log(get_current_opcode());
         this.terminal.draw(get_display_memory());
     }
 }
