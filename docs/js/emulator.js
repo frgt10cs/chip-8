@@ -7,7 +7,7 @@ import { DelayMode, Settings, } from './settings.js';
 import { EditDelayValueState } from './states/editDelayValueState.js';
 import { PlayState } from "./states/playState.js";
 import { PauseState } from './states/pauseState.js';
-import { load_rom, reset } from "../pkg/chip8.js";
+import { load_rom, reset } from "./chip8.js";
 import {AboutState} from './states/aboutState.js';
 
 class Emulator {

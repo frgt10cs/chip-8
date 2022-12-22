@@ -1,4 +1,4 @@
-import init from '../pkg/chip8.js';
+import init from './chip8.js';
 import { Terminal } from './terminal.js';
 import { Emulator } from './emulator.js';
 import { ChipGame } from './chipGame.js';
