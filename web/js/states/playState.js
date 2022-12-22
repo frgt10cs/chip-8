@@ -52,9 +52,7 @@ class PlayState extends State {
 
     draw = () => {
         set_keys_states(Object.values(this.keyStates));
-        console.log(get_current_opcode());
         exec_cycle();
-        console.log(get_current_opcode());
         this.terminal.draw(get_display_memory());
     }
 }
