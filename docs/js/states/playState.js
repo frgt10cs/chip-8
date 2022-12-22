@@ -1,4 +1,4 @@
-import { load_rom, exec_cycle, get_display_memory, set_keys_states, reset, get_current_opcode } from "../../../pkg/chip8.js";
+import { load_rom, exec_cycle, get_display_memory, set_keys_states, reset, get_current_opcode } from "../../pkg/chip8.js";
 import { State } from "./state.js";
 import { MessageTypes, StateMessage } from '../stateMessage.js';
 
