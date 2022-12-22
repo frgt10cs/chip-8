@@ -21,7 +21,7 @@ class Emulator {
         this.settings = new Settings(true, true, DelayMode.GAME_BASED, 20);
         this.gameBaseDelayMode = true;
         this.delay = 20;
-        this.menuDelay = 1000;
+        this.menuDelay = 200;
 
         this.states = [
             new MainMenuState(this.terminal),
